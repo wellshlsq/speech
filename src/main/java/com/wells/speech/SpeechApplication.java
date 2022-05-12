@@ -37,13 +37,13 @@ public class SpeechApplication {
 		//CreateObjectInput payload = new CreateObjectInput();
 		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
 				"name='en-US-ChristopherNeural'>\n" +
-				"Microsoft Speech Service Text-to-Speech API\n" +
+				"Bodhi Bjorn Joaquin\n" +
 				"</voice></speak>";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.valueOf("*/*")));
 
 		headers.setContentType(MediaType.valueOf("application/ssml+xml"));
-		headers.set("Ocp-Apim-Subscription-Key", "f5555f1eb8684664ba777797e06bc64a");
+		headers.set("Ocp-Apim-Subscription-Key", "4c58729192b0462ba6f666625ab8e9c8");
 		headers.set("X-Microsoft-OutputFormat", "audio-24khz-160kbitrate-mono-mp3");
 		headers.setConnection("keep-alive");
 
