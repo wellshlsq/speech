@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { VoicedisplayComponent } from './components/voicedisplay/voicedisplay.component';
 import {SafePipe} from './safe.pipe';
 import { RecordVoiceComponent } from './components/record-voice/record-voice.component';
+import { AudioRecordingService } from './components/record-voice/audio-recording.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,7 @@ import { RecordVoiceComponent } from './components/record-voice/record-voice.com
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [AudioRecordingService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

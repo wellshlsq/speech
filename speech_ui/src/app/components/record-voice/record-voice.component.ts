@@ -1,74 +1,91 @@
-import { Component, OnInit } from '@angular/core';
-import * as RecordRTC from 'recordrtc';
-declare var $: any;
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit,OnDestroy,ChangeDetectionStrategy, ChangeDetectorRef, ViewChild  } from '@angular/core';
 
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { AudioRecordingService } from './audio-recording.service';
 @Component({
   selector: 'app-record-voice',
   templateUrl: './record-voice.component.html',
-  styleUrls: ['./record-voice.component.css']
+  styleUrls: ['./record-voice.component.css'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class RecordVoiceComponent implements OnInit {
+export class RecordVoiceComponent implements OnDestroy {
+  isPlaying = false;
+  displayControls = true;
+  isAudioRecording = false;
+  audioRecordedTime;
+  audioBlobUrl;
+  audioBlob;
+  audioName;
+  audioStream;
+  audioConf = { audio: true}
+constructor(
+    private ref: ChangeDetectorRef,
+    private audioRecordingService: AudioRecordingService,
+    private sanitizer: DomSanitizer
+  ) {
 
-  title = 'micRecorder';
-  //Lets declare Record OBJ
-  record: RecordRTC.StereoAudioRecorder | undefined;
-  //Will use this flag for toggeling recording
-  recording = false;
-  //URL of Blob
-  url: string | undefined;
-  error: string | undefined;
-  constructor(private domSanitizer: DomSanitizer) {}
-  sanitize(url: string) {
-  return this.domSanitizer.bypassSecurityTrustUrl(url);
+
+    this.audioRecordingService.recordingFailed().subscribe(() => {
+      this.isAudioRecording = false;
+      this.ref.detectChanges();
+ });
+
+    this.audioRecordingService.getRecordedTime().subscribe((time) => {
+      this.audioRecordedTime = time;
+      this.ref.detectChanges();
+    });
+
+    this.audioRecordingService.getRecordedBlob().subscribe((data) => {
+      this.audioBlob = data.blob;
+      this.audioName = data.title;
+      this.audioBlobUrl = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(data.blob));
+      this.ref.detectChanges();
+    });
   }
-  /**
-  * Start recording.
-  */
-  initiateRecording() {
-  this.recording = true;
-  let mediaConstraints = {
-  video: false,
-  audio: true
-  };
-  navigator.mediaDevices.getUserMedia(mediaConstraints).then(this.successCallback.bind(this), this.errorCallback.bind(this));
-  }
-  /**
-  * Will be called automatically.
-  */
-  successCallback(stream: MediaStream) {
-  var options = {
-  mimeType: "audio/wav",
-  numberOfAudioChannels: 1,
-  sampleRate: 16000,
-  };
-  //Start Actuall Recording
-  var StereoAudioRecorder = RecordRTC.StereoAudioRecorder;
-  this.record = new StereoAudioRecorder(stream, options);
-  this.record.record();
-  }
-  /**
-  * Stop recording.
-  */
-  stopRecording() {
-  this.recording = false;
-  this.record.stop(this.processRecording.bind(this));
-  }
-  /**
-  * processRecording Do what ever you want with blob
-  * @param  {any} blob Blog
-  */
-  processRecording(blob: Blob | MediaSource) {
-  this.url = URL.createObjectURL(blob);
-  console.log("blob", blob);
-  console.log("url", this.url);
-  }
-  /**
-  * Process Error.
-  */
-  errorCallback(error: any) {
-  this.error = 'Can not play audio in your browser';
-  }
-  ngOnInit() {}
+  startAudioRecording() {
+      if (!this.isAudioRecording) {
+        this.isAudioRecording = true;
+        this.audioRecordingService.startRecording();
+      }
+    }
+
+    abortAudioRecording() {
+      if (this.isAudioRecording) {
+        this.isAudioRecording = false;
+        this.audioRecordingService.abortRecording();
+      }
+    }
+
+    stopAudioRecording() {
+      if (this.isAudioRecording) {
+        this.audioRecordingService.stopRecording();
+        this.isAudioRecording = false;
+      }
+    }
+
+    clearAudioRecordedData() {
+      this.audioBlobUrl = null;
+    }
+
+    downloadAudioRecordedData() {
+      this._downloadFile(this.audioBlob, 'audio/mp3', this.audioName);
+    }
+
+    ngOnDestroy(): void {
+      this.abortAudioRecording();
+    }
+
+    _downloadFile(data: any, type: string, filename: string): any {
+        const blob = new Blob([data], { type: type });
+        const url = window.URL.createObjectURL(blob);
+        //this.video.srcObject = stream;
+        //const url = data;
+        const anchor = document.createElement('a');
+        anchor.download = filename;
+        anchor.href = url;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+      }
 
 }
