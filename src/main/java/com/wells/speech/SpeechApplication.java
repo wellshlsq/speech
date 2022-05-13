@@ -1,5 +1,6 @@
 package com.wells.speech;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -17,24 +18,22 @@ import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+
 @RestController
 @CrossOrigin(origins = "https://localhost:4200")
-
 public class SpeechApplication {
 
+	@Autowired
+	ConfigProperties configProp;
+	static String SUBSCRPTION_KEY = "speech.subscription-key";
+	static String OUTPUT_FORMAT = "speech.outputFormat";
+	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
 	@GetMapping("/message")
-	public ResponseEntity message(){
-		//return "Congrats ! your application deployed successfully in Azure Platform. !";
+	public ResponseEntity message() throws Exception{
 
-
-		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
-
-		//RestTemplate restTemplate = new RestTemplate();
-		//Object result = restTemplate.pos(uri, Object.class);
-		System.out.println("test");
+		//String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
 
 		RestTemplate template = new RestTemplate();
-		//CreateObjectInput payload = new CreateObjectInput();
 		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
 				"name='en-US-ChristopherNeural'>\n" +
 				"Bodhi Bjorn Joaquin\n" +
@@ -43,33 +42,17 @@ public class SpeechApplication {
 		headers.setAccept(Arrays.asList(MediaType.valueOf("*/*")));
 
 		headers.setContentType(MediaType.valueOf("application/ssml+xml"));
-		headers.set("Ocp-Apim-Subscription-Key", "4c58729192b0462ba6f666625ab8e9c8");
-		headers.set("X-Microsoft-OutputFormat", "audio-24khz-160kbitrate-mono-mp3");
+		headers.set("Ocp-Apim-Subscription-Key", configProp.getConfigValue(SUBSCRPTION_KEY));
+		headers.set("X-Microsoft-OutputFormat", configProp.getConfigValue(OUTPUT_FORMAT));
 		headers.setConnection("keep-alive");
-
-		/*List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.setSupportedMediaTypes(Collections.singletonList(MediaType.ALL));
-		messageConverters.add(converter);
-
-		template.setMessageConverters(messageConverters);*/
 
 		HttpEntity<Object> requestEntity =
 				new HttpEntity<>(payload, headers);
 
-		/*Object response =
-				template.exchange(uri, HttpMethod.POST, requestEntity,
-						byte[].class);*/
-
-
-		ResponseEntity<byte[]> entity = template.exchange(uri, HttpMethod.POST, requestEntity,
+		ResponseEntity<byte[]> entity = template.exchange(configProp.getConfigValue(AZURE_SPEECH_SERVICE_ENDPOINT), HttpMethod.POST, requestEntity,
 				byte[].class);
-		//byte[] body = entity.getBody();
-		//ResponseBody respBody
-		//InputStream in = servletContext.getResourceAsStream(entity);
 
 		return entity;
-		//return "Congrats ! your application deployed successfully in Azure Platform. !";
 	}
 
 	@RequestMapping(value="/register",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
