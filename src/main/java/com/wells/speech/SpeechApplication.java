@@ -5,22 +5,21 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.ws.Response;
-import java.io.InputStream;
-import java.util.ArrayList;
+
+
+
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 
 @RestController
-@CrossOrigin(origins = "https://localhost:4200")
+//@CrossOrigin(origins = "https://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8080")
 public class SpeechApplication {
 
 	@Autowired

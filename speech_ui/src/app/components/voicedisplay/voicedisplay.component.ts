@@ -16,18 +16,18 @@ export class VoicedisplayComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let response = this.http.get("http://localhost:8080/message");
-    response.subscribe((data)=>{
-                                    //console.log(data);
-                                    let binary= this.convertDataURIToBinary(JSON.stringify(data));
-                                        let blob=new Blob([binary], {type : 'audio/ogg'});
-                                        let blobUrl = URL.createObjectURL(blob);
-                                        this.audioSource = blobUrl;
-                                        //this.audioTag.nativeElement.setAttribute('src',this.audioSource);
-                                        console.log(this.audioSource);
-                                     });
+      let response = this.http.get("http://localhost:8080/message", {responseType: 'blob'});
+      response.subscribe((data)=>{
+                                      //console.log(data);
+  //                                     let binary= this.convertDataURIToBinary(JSON.stringify(data));
+                                          let blob=new Blob([data], {type : 'audio/ogg'});
+                                          let blobUrl = URL.createObjectURL(blob);
+                                          this.audioSource = blobUrl;
+  //                                         this.audioTag.nativeElement.setAttribute('src',this.audioSource);
+                                          console.log(this.audioSource);
+                                       });
 
-    }
+      }
 
   loadAudioClick(){
 
