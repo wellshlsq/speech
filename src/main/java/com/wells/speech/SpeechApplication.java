@@ -1,39 +1,50 @@
 package com.wells.speech;
 
+import com.wells.speech.dbcon.BasicConnectionPool;
+import com.wells.speech.dbcon.ConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.ws.Response;
-import java.io.InputStream;
-import java.util.ArrayList;
+import java.sql.Connection;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-
 @RestController
 @CrossOrigin(origins = "https://localhost:4200")
+
 public class SpeechApplication {
 
 	@Autowired
 	ConfigProperties configProp;
+
+	@Autowired
+	BasicConnectionPool connPool;
 	static String SUBSCRPTION_KEY = "speech.subscription-key";
 	static String OUTPUT_FORMAT = "speech.outputFormat";
 	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
+
 	@GetMapping("/message")
 	public ResponseEntity message() throws Exception{
+		try {
+			System.out.println("Getting connection from pool..");
+			Connection conn = connPool.getConnection();
+			if(conn != null)
+				System.out.println("Got Connection from the pool");
 
-		//String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
+		} catch(Exception se) {
+			System.out.println("SQLException : " + se.getMessage());
+			se.printStackTrace();
+		}
+		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
+		System.out.println("Sounding name out..");
 
 		RestTemplate template = new RestTemplate();
+		//CreateObjectInput payload = new CreateObjectInput();
 		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
 				"name='en-US-ChristopherNeural'>\n" +
 				"Bodhi Bjorn Joaquin\n" +
@@ -51,6 +62,9 @@ public class SpeechApplication {
 
 		ResponseEntity<byte[]> entity = template.exchange(configProp.getConfigValue(AZURE_SPEECH_SERVICE_ENDPOINT), HttpMethod.POST, requestEntity,
 				byte[].class);
+		//byte[] body = entity.getBody();
+		//ResponseBody respBody
+		//InputStream in = servletContext.getResourceAsStream(entity);
 
 		return entity;
 	}
