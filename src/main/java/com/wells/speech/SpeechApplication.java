@@ -75,6 +75,14 @@ public class SpeechApplication {
 		return "Congrats !!";
 	}
 
+	@PostMapping(value="/uploadRecording")
+	public String uploadRecording(@RequestBody AudioRecording audioRecording) {
+		System.out.println(audioRecording.getName());
+		System.out.println(audioRecording.getAudioBlob());
+		byte[] byteArrray = audioRecording.getAudioBlob().getBytes();
+		return "Congrats !!";
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(SpeechApplication.class, args);
 	}
