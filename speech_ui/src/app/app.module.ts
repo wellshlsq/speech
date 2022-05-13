@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { VoicedisplayComponent } from './components/voicedisplay/voicedisplay.component';
 import {SafePipe} from './safe.pipe';
+import { RecordVoiceComponent } from './components/record-voice/record-voice.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SafePipe,
-    VoicedisplayComponent
+    VoicedisplayComponent,
+    RecordVoiceComponent
 
   ],
   imports: [
