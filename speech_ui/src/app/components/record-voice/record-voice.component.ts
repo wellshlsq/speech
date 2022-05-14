@@ -1,8 +1,9 @@
-import { Component, OnInit,OnDestroy,ChangeDetectionStrategy, ChangeDetectorRef, ViewChild  } from '@angular/core';
+import { Component, OnInit,OnDestroy,ChangeDetectionStrategy, ChangeDetectorRef, ViewChild,Input   } from '@angular/core';
 
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { AudioRecordingService } from './audio-recording.service';
 import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-record-voice',
@@ -10,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./record-voice.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
 })
+
+
 export class RecordVoiceComponent implements OnDestroy {
   isPlaying = false;
   displayControls = true;
@@ -19,12 +22,17 @@ export class RecordVoiceComponent implements OnDestroy {
   audioBlob;
   audioName;
   audioStream;
-  audioConf = { audio: true}
+  audioConf = { audio: true};
+
+  @Input() fName;
+  @Input() lName;
+
 constructor(
     private ref: ChangeDetectorRef,
     private audioRecordingService: AudioRecordingService,
     private http:HttpClient,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    
   ) {
 
 
@@ -70,55 +78,13 @@ constructor(
       this.audioBlobUrl = null;
     }
 
-    downloadAudioRecordedData() {
-      this._downloadFile(this.audioBlob, 'audio/mp3', this.audioName);
-    }
-
   uploadAudioRecordedData() {
-      //this._downloadFile(this.audioBlob, 'audio/mp3', this.audioName);
-     //const audioBlob = new Blob([this.audioBlob], { type: 'audio/mp3' });
-     //const string = await this.audioBlob.text();
-     const reader = new FileReader();
-     // This fires after the blob has been read/loaded.
-reader.addEventListener('loadend', (e) => {
-  const text = e.target?.result;
-  console.log(text);
-  this.http.post<any>('http://localhost:8080/uploadRecording',{'name':'Bob','audioBlob':text})
+    this.http.post<any>('http://localhost:8080/uploadRecording/'+this.fName+"/"+this.lName,this.audioBlob,{ responseType: 'blob' as 'json'})
        .subscribe(data => {
-        console.log("testtttt  "+data);})
-});
-
-// Start reading the blob as text.
-      reader.readAsText(this.audioBlob);
-      // this.http.post<any>('http://localhost:8080/uploadRecording',{'name':'Bob','audioBlob':this.audioBlob})
-       //.subscribe(data => {
-       // console.log("testtttt  "+data);
-      //})
-           /* response.subscribe((data)=>{
-                                            //console.log(data);
-        //                                     let binary= this.convertDataURIToBinary(JSON.stringify(data));
-                                                let blob=new Blob([data], {type : 'audio/ogg'});
-                                                let blobUrl = URL.createObjectURL(blob);
-                                                this.audioSource = blobUrl;
-        //                                         this.audioTag.nativeElement.setAttribute('src',this.audioSource);
-                                                console.log(this.audioSource);
-                                             });*/
-                                            }
+      })
+  }
     ngOnDestroy(): void {
       this.abortAudioRecording();
     }
-
-    _downloadFile(data: any, type: string, filename: string): any {
-        const blob = new Blob([data], { type: type });
-        const url = window.URL.createObjectURL(blob);
-        //this.video.srcObject = stream;
-        //const url = data;
-        const anchor = document.createElement('a');
-        anchor.download = filename;
-        anchor.href = url;
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-      }
 
 }

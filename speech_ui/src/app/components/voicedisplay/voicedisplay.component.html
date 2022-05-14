@@ -1,3 +1,13 @@
-<p>Voice display works</p>
-Audio<audio [src]="audioSource | safe:'url'" id="audio" controls #audioTag>
+<audio [src]="audioSource | safe:'url'" id="audio" autoplay #audioTag >
 </audio>
+<br>
+
+     <label for="fname">First name:</label>
+     <input type="text" id="fname" name="fname" [(ngModel)]="fName"><br><br>
+     <label for="lname">Last name:</label>
+     <input type="text" id="lname" name="lname" [(ngModel)]="lName"><br><br>
+   <br>
+   <label for="fname">Listen to the pronunciation</label> <img class="image" src="assets/Speaker_Icon.png" alt="voice" style="width: 20px; height: 20px;" (click)="loadAudioClick()" />
+
+
+ <app-record-voice [fName]='fName' [lName]='lName'></app-record-voice>

@@ -1,10 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import RecordRTC from 'recordrtc';
 import * as moment from 'moment';
-//import * as moment from 'moment/moment.js';
-//import * as printJS from 'print-js'
 import { Observable, Subject } from 'rxjs';
-//import { isNullOrUndefined } from 'util';
 
 interface RecordedAudioOutput {
   blob: Blob;
@@ -38,9 +35,7 @@ export class AudioRecordingService {
 
 
   startRecording() {
-
     if (this.recorder) {
-      // It means recording is already started or it is already recording something
       return;
     }
 

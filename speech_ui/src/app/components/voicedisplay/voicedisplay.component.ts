@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 export class VoicedisplayComponent implements OnInit {
   name = 'Angular';
   audioSource = '';
+  fName = '';
+  lName = '';
 
   @ViewChild('audioTag') audioTag:ElementRef | undefined;
 
@@ -16,21 +18,32 @@ export class VoicedisplayComponent implements OnInit {
 
   ngOnInit(): void {
 
-      let response = this.http.get("http://localhost:8080/message", {responseType: 'blob'});
+      let response = this.http.get("http://localhost:8080/message/"+this.fName, {responseType: 'blob'});
       response.subscribe((data)=>{
-                                      //console.log(data);
-  //                                     let binary= this.convertDataURIToBinary(JSON.stringify(data));
-                                          let blob=new Blob([data], {type : 'audio/ogg'});
-                                          let blobUrl = URL.createObjectURL(blob);
-                                          this.audioSource = blobUrl;
-  //                                         this.audioTag.nativeElement.setAttribute('src',this.audioSource);
-                                          console.log(this.audioSource);
-                                       });
+            let blob=new Blob([data], {type : 'audio/ogg'});
+            let blobUrl = URL.createObjectURL(blob);
+            this.audioSource = blobUrl;
+      });
 
-      }
+  }
 
   loadAudioClick(){
-
+    if(true) {
+      let response = this.http.get("http://localhost:8080/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
+      response.subscribe((data)=>{
+            let blob=new Blob([data], {type : 'audio/ogg'});
+            let blobUrl = URL.createObjectURL(blob);
+            this.audioSource = blobUrl;
+         });
+    } else{
+      let response = this.http.get("http://localhost:8080/message/"+this.fName+"/"+this.lName, {responseType: 'blob'});
+      response.subscribe((data)=>{
+            let blob=new Blob([data], {type : 'audio/ogg'});
+            let blobUrl = URL.createObjectURL(blob);
+            this.audioSource = blobUrl;
+            console.log(this.audioSource);
+         });
+    }
     }
     convertDataURIToBinary(dataURI: String) {
       let BASE64_MARKER = ';base64,';

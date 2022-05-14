@@ -3,6 +3,7 @@ package com.wells.speech;
 public class AudioRecording {
     private String name;
     private String audioBlob;
+    private byte[] audioInByte;
 
     public String getName() {
         return name;
@@ -18,5 +19,13 @@ public class AudioRecording {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public byte[] getAudioInByte() {
+        return audioInByte;
+    }
+
+    public void setAudioInByte(byte[] audioInByte) {
+        this.audioInByte = audioInByte;
     }
 }

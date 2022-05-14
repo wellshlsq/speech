@@ -32,8 +32,9 @@ public class SpeechApplication {
 	static String OUTPUT_FORMAT = "speech.outputFormat";
 	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
 
-	@GetMapping("/message")
-	public ResponseEntity message() throws Exception{
+	//@PostMapping("/message")
+	@GetMapping("/message/{fName}/{lName}")
+	public ResponseEntity message(@PathVariable String fName,@PathVariable String lName) throws Exception{
 
 		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
 		System.out.println("Sounding name out..");
@@ -42,7 +43,7 @@ public class SpeechApplication {
 		//CreateObjectInput payload = new CreateObjectInput();
 		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
 				"name='en-US-ChristopherNeural'>\n" +
-				"Bodhi Bjorn Joaquin\n" +
+				fName+ " " +lName+ "\n" +
 				"</voice></speak>";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.valueOf("*/*")));
@@ -57,26 +58,25 @@ public class SpeechApplication {
 
 		ResponseEntity<byte[]> entity = template.exchange(configProp.getConfigValue(AZURE_SPEECH_SERVICE_ENDPOINT), HttpMethod.POST, requestEntity,
 				byte[].class);
-		//byte[] body = entity.getBody();
-		//ResponseBody respBody
-		//InputStream in = servletContext.getResourceAsStream(entity);
-
 		return entity;
 	}
 
-	@RequestMapping(value="/register",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	public String register() {
-		//Response resp = "Congrats !!";
-		return "Congrats !!";
+	@GetMapping("/getCustomRecording/{fName}/{lName}")
+	public ResponseEntity getCustomRecording(@PathVariable String fName,@PathVariable String lName) throws Exception{
+		HttpHeaders headers = new HttpHeaders();
+		headers.setCacheControl("no-cache");
+		headers.setContentType(MediaType.valueOf("audio/mpeg"));
+		return new ResponseEntity<byte[]>(recordingRepository.findByName(fName+" "+ lName).get(0).getAudioblob(), headers, HttpStatus.OK);
 	}
 
-	@PostMapping(value="/uploadRecording")
-	public String uploadRecording(@RequestBody AudioRecording audioRecording) {
+
+	@PostMapping(value="/uploadRecording/{fName}/{lName}")
+	public String uploadRecording(@RequestBody byte[] audioRecording,@PathVariable String fName,@PathVariable String lName) {
 		Recording newRecord = new Recording();
-		newRecord.setName(audioRecording.getName());
-		newRecord.setAudioblob(audioRecording.getAudioBlob().getBytes());
+		newRecord.setName(fName+" "+ lName);
+		newRecord.setAudioblob(audioRecording);
 		recordingRepository.save(newRecord);
-		return "Congrats !!";
+		return "Recording uploaded !!";
 	}
 
 	public static void main(String[] args) {

@@ -7,6 +7,7 @@ import { VoicedisplayComponent } from './components/voicedisplay/voicedisplay.co
 import {SafePipe} from './safe.pipe';
 import { RecordVoiceComponent } from './components/record-voice/record-voice.component';
 import { AudioRecordingService } from './components/record-voice/audio-recording.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AudioRecordingService } from './components/record-voice/audio-recording
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [AudioRecordingService],
   bootstrap: [AppComponent]
