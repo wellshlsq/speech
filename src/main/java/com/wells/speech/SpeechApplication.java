@@ -1,45 +1,40 @@
 package com.wells.speech;
 
-import com.wells.speech.dbcon.BasicConnectionPool;
-import com.wells.speech.dbcon.ConnectionPool;
+import com.wells.speech.models.Recording;
+import com.wells.speech.models.RecordingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Connection;
 import java.util.Arrays;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
+@SpringBootApplication(exclude = {
+		DataSourceAutoConfiguration.class,
+		DataSourceTransactionManagerAutoConfiguration.class,
+		HibernateJpaAutoConfiguration.class
+})
 @RestController
-@CrossOrigin(origins = "https://localhost:4200")
-
+@CrossOrigin(origins = "*")
 public class SpeechApplication {
 
 	@Autowired
 	ConfigProperties configProp;
-
 	@Autowired
-	BasicConnectionPool connPool;
+	RecordingRepository recordingRepository;
+
 	static String SUBSCRPTION_KEY = "speech.subscription-key";
 	static String OUTPUT_FORMAT = "speech.outputFormat";
 	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
 
 	@GetMapping("/message")
 	public ResponseEntity message() throws Exception{
-		try {
-			System.out.println("Getting connection from pool..");
-			Connection conn = connPool.getConnection();
-			if(conn != null)
-				System.out.println("Got Connection from the pool");
 
-		} catch(Exception se) {
-			System.out.println("SQLException : " + se.getMessage());
-			se.printStackTrace();
-		}
 		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
 		System.out.println("Sounding name out..");
 
@@ -77,9 +72,10 @@ public class SpeechApplication {
 
 	@PostMapping(value="/uploadRecording")
 	public String uploadRecording(@RequestBody AudioRecording audioRecording) {
-		System.out.println(audioRecording.getName());
-		System.out.println(audioRecording.getAudioBlob());
-		byte[] byteArrray = audioRecording.getAudioBlob().getBytes();
+		Recording newRecord = new Recording();
+		newRecord.setName(audioRecording.getName());
+		newRecord.setAudioblob(audioRecording.getAudioBlob().getBytes());
+		recordingRepository.save(newRecord);
 		return "Congrats !!";
 	}
 
