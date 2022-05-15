@@ -79,7 +79,8 @@ constructor(
     }
 
   uploadAudioRecordedData() {
-    this.http.post<any>('http://localhost:8080/uploadRecording/'+this.fName+"/"+this.lName,this.audioBlob,{ responseType: 'blob' as 'json'})
+    var baseURL = window.location.protocol + '//' + window.location.host;
+    this.http.post<any>(baseURL+'/uploadRecording/'+this.fName+"/"+this.lName,this.audioBlob,{ responseType: 'blob' as 'json'})
        .subscribe(data => {
       })
   }

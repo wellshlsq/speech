@@ -38,15 +38,17 @@ export class VoicedisplayComponent implements OnInit {
 
 
   loadAudioClick(){
+    var baseURL = window.location.protocol + '//' + window.location.host;
     if(this.showCustomRecordingOption || this.fName == 'Jamie') {
-      let response = this.http.get("http://localhost:8080/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
+      
+      let response = this.http.get(baseURL+"/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});
             let blobUrl = URL.createObjectURL(blob);
             this.audioSource = blobUrl;
          });
     } else{
-      let response = this.http.get("http://localhost:8080/message/"+this.fName+"/"+this.lName, {responseType: 'blob'});
+      let response = this.http.get(baseURL+"/message/"+this.fName+"/"+this.lName, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});
             let blobUrl = URL.createObjectURL(blob);
