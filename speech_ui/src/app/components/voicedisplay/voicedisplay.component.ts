@@ -20,24 +20,25 @@ export class VoicedisplayComponent implements OnInit {
   constructor(private http:HttpClient) { }
 
   ngOnInit(): void {
-
-      let response = this.http.get("http://localhost:8080/message/"+this.fName, {responseType: 'blob'});
-      response.subscribe((data)=>{
-            let blob=new Blob([data], {type : 'audio/ogg'});
-            let blobUrl = URL.createObjectURL(blob);
-            this.audioSource = blobUrl;
-      });
-
+    let user = sessionStorage.getItem('username');
+    if(user=='jamie') {
+      this.fName = 'Jamie';
+      this.lName = 'Lannister';
+      this.customPronuncitionOptIn = true;
+    } else if(user=='cersie'){
+      this.fName = 'Cersie';
+      this.lName = 'Lannister';
+    }
   }
 
   public customRecordingOptInChanged(value:boolean){
     this.showCustomRecordingOption = value;
 }
 
-  
+
 
   loadAudioClick(){
-    if(this.showCustomRecordingOption) {
+    if(this.showCustomRecordingOption || this.fName == 'Jamie') {
       let response = this.http.get("http://localhost:8080/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});

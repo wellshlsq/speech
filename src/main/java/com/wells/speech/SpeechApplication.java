@@ -36,8 +36,6 @@ public class SpeechApplication {
 	@GetMapping("/message/{fName}/{lName}")
 	public ResponseEntity message(@PathVariable String fName,@PathVariable String lName) throws Exception{
 
-		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
-		System.out.println("Sounding name out..");
 
 		RestTemplate template = new RestTemplate();
 		//CreateObjectInput payload = new CreateObjectInput();
@@ -68,7 +66,6 @@ public class SpeechApplication {
 		headers.setContentType(MediaType.valueOf("audio/mpeg"));
 		return new ResponseEntity<byte[]>(recordingRepository.findByName(fName+" "+ lName).get(0).getAudioblob(), headers, HttpStatus.OK);
 	}
-
 
 	@PostMapping(value="/uploadRecording/{fName}/{lName}")
 	public String uploadRecording(@RequestBody byte[] audioRecording,@PathVariable String fName,@PathVariable String lName) {

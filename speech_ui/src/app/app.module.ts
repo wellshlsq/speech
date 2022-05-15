@@ -8,13 +8,17 @@ import {SafePipe} from './safe.pipe';
 import { RecordVoiceComponent } from './components/record-voice/record-voice.component';
 import { AudioRecordingService } from './components/record-voice/audio-recording.service';
 import { FormsModule } from '@angular/forms';
+import { LoginComponent } from './components/login/login.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SafePipe,
     VoicedisplayComponent,
-    RecordVoiceComponent
+    RecordVoiceComponent,
+    LoginComponent,
+    HeaderComponent
 
   ],
   imports: [

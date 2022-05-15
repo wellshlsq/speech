@@ -1,12 +1,22 @@
-<div>
-  <button class="start-button" *ngIf="!isAudioRecording && !audioBlobUrl" (click)="startAudioRecording()">Start Audio Recording</button>
-  <button class="stop-button" *ngIf="isAudioRecording && !audioBlobUrl" (click)="stopAudioRecording()">Stop Audio Recording</button>
-  <button class="cancel-button" *ngIf="!isAudioRecording && audioBlobUrl" (click)="clearAudioRecordedData()">Clear Audio Recording</button>
-  <br>
-  <button class="cancel-button" *ngIf="!isAudioRecording && audioBlobUrl" (click)="uploadAudioRecordedData()">Upload Audio Recording</button>
-  <div id="audioTimer" *ngIf="isAudioRecording && !audioBlobUrl"> {{ audioRecordedTime }} </div>
-  <audio *ngIf="!isAudioRecording && audioBlobUrl"  controls>
-    <source [src]="audioBlobUrl" type="audio/mp3">
-  </audio>
-</div>
 
+
+<table style="border-collapse: collapse; width: 650px; height: 36px;" border="0">
+  <tbody>
+  <tr style="height: 18px;">
+  <td><button class="stop-button"*ngIf="!isAudioRecording && !audioBlobUrl" (click)="startAudioRecording()">Start Audio Recording</button><div id="audioTimer" *ngIf="isAudioRecording && !audioBlobUrl"> {{ audioRecordedTime }} </div>
+    <button class="stop-button"*ngIf="isAudioRecording && !audioBlobUrl" (click)="stopAudioRecording()">Stop Audio Recording</button>
+  </td>
+  <td></td>
+  </tr>
+
+  <tr>
+    <td><audio *ngIf="!isAudioRecording && audioBlobUrl" controls >
+      <source [src]="audioBlobUrl" type="audio/mp3">
+    </audio></td>
+    </tr>
+    <tr>
+      <td><button class="stop-button" *ngIf="!isAudioRecording && audioBlobUrl" (click)="clearAudioRecordedData()">Clear Audio Recording</button> </td>
+      <td><button class="stop-button" *ngIf="!isAudioRecording && audioBlobUrl" (click)="uploadAudioRecordedData()">Upload Audio Recording</button></td>
+      </tr>
+  </tbody>
+  </table>
