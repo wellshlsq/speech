@@ -2,12 +2,51 @@
 </audio>
 <br>
 
-     <label for="fname">First name:</label>
-     <input type="text" id="fname" name="fname" [(ngModel)]="fName"><br><br>
-     <label for="lname">Last name:</label>
-     <input type="text" id="lname" name="lname" [(ngModel)]="lName"><br><br>
-   <br>
-   <label for="fname">Listen to the pronunciation</label> <img class="image" src="assets/Speaker_Icon.png" alt="voice" style="width: 20px; height: 20px;" (click)="loadAudioClick()" />
+<table style="border-collapse: collapse; width: 300px; height: 36px;" border="0">
+  <tbody>
+  <tr style="height: 18px;">
+  <td><label for="fname">First name:</label></td>
+  <td><input type="text" id="fname" name="fname" [(ngModel)]="fName"></td>
+  </tr>
+  <tr style="height: 18px;">
+  <td><label for="lname">Last name:</label></td>
+  <td><input type="text" id="lname" name="lname" [(ngModel)]="lName"></td>
+  
+  </tr>
+  <tr>
+    <td></td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+  <tr>
+  <td><label for="fname">Listen to the pronunciation</label> <img class="image" src="assets/Speaker_Icon.png" alt="voice" style="width: 20px; height: 20px;" (click)="loadAudioClick()" /></td>
+  <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+  <td>Opt in for customize pronunciation</td>
+  <td>
+    <div class="checkbox">
+      
+      <label>
 
+          <input #saveUserNameCheckBox type="checkbox" 
+          id="saveUserNameCheckBox" 
+          [checked]="customPronuncitionOptIn" 
+          
+          (change)="customRecordingOptInChanged(saveUserNameCheckBox.checked)">
+      </label>
+      </div>
+  </td>
+  </tr>
+  </tbody>
+  </table>
+  <br>
+  <br>
+<div *ngIf ="showCustomRecordingOption">
+  <app-record-voice [fName]='fName' [lName]='lName'></app-record-voice>
+</div>
 
- <app-record-voice [fName]='fName' [lName]='lName'></app-record-voice>

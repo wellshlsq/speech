@@ -11,6 +11,9 @@ export class VoicedisplayComponent implements OnInit {
   audioSource = '';
   fName = '';
   lName = '';
+  //customPronuncitionOptIn=false;
+  customPronuncitionOptIn: boolean | undefined;
+  showCustomRecordingOption: boolean | undefined;
 
   @ViewChild('audioTag') audioTag:ElementRef | undefined;
 
@@ -27,8 +30,14 @@ export class VoicedisplayComponent implements OnInit {
 
   }
 
+  public customRecordingOptInChanged(value:boolean){
+    this.showCustomRecordingOption = value;
+}
+
+  
+
   loadAudioClick(){
-    if(true) {
+    if(this.showCustomRecordingOption) {
       let response = this.http.get("http://localhost:8080/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});
