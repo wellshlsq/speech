@@ -15,4 +15,7 @@ public interface RecordingRepository extends YsqlRepository<Recording, Integer> 
 
     @Query("select * from recording where name = :name")
     List<Recording> findByName(@Param("name") String name);
+
+    @Query("select * from recording where username = :userName")
+    Recording findByUserName(@Param("userName") String userName);
 }

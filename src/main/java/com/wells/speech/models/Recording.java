@@ -12,6 +12,15 @@ public class Recording {
 
     private byte[] audioblob;
 
+    private String username;
+
+    private String userrole;
+
+    private boolean custompronunciation;
+
+    private String firstname;
+    private String lastname;
+
     public Long getId() {
         return id;
     }
@@ -34,5 +43,45 @@ public class Recording {
 
     public void setAudioblob(byte[] audioblob) {
         this.audioblob = audioblob;
+    }
+
+    public String getUserName() {
+        return username;
+    }
+
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public String getUserrole() {
+        return userrole;
+    }
+
+    public void setUserrole(String userrole) {
+        this.userrole = userrole;
+    }
+
+    public boolean isCustompronunciation() {
+        return custompronunciation;
+    }
+
+    public void setCustompronunciation(boolean custompronunciation) {
+        this.custompronunciation = custompronunciation;
+    }
+
+    public String getFirstName() {
+        return firstname;
+    }
+
+    public void setFirstName(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastName() {
+        return lastname;
+    }
+
+    public void setLastName(String lastname) {
+        this.lastname = lastname;
     }
 }

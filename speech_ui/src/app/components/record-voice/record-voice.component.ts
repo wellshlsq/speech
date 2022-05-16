@@ -26,13 +26,14 @@ export class RecordVoiceComponent implements OnDestroy {
 
   @Input() fName;
   @Input() lName;
+  @Input() username;
 
 constructor(
     private ref: ChangeDetectorRef,
     private audioRecordingService: AudioRecordingService,
     private http:HttpClient,
     private sanitizer: DomSanitizer,
-    
+
   ) {
 
 
@@ -80,7 +81,7 @@ constructor(
 
   uploadAudioRecordedData() {
     var baseURL = window.location.protocol + '//' + window.location.host;
-    this.http.post<any>(baseURL+'/uploadRecording/'+this.fName+"/"+this.lName,this.audioBlob,{ responseType: 'blob' as 'json'})
+    this.http.post<any>(baseURL+'/uploadRecording/'+this.fName+"/"+this.lName+"/"+this.username,this.audioBlob,{ responseType: 'blob' as 'json'})
        .subscribe(data => {
       })
   }
