@@ -1,5 +1,7 @@
 package com.wells.speech;
 
+import com.wells.speech.dto.LoadRequest;
+import com.wells.speech.dto.UserData;
 import com.wells.speech.models.Recording;
 import com.wells.speech.models.RecordingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,24 @@ public class SpeechApplication {
 		newRecord.setAudioblob(audioRecording);
 		recordingRepository.save(newRecord);
 		return "Recording uploaded !!";
+	}
+
+	@PostMapping(value = "/getUserData")
+	public ResponseEntity getUserData(@RequestBody LoadRequest request) {
+		System.out.println("getUserData:" + request.getUserName());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setCacheControl("no-cache");
+		headers.setContentType(MediaType.valueOf("application/json"));
+		Recording recording = recordingRepository.findByUserName(request.getUserName());
+		UserData userData = new UserData();
+		if(recording != null) {
+			userData.setId(recording.getId());
+			userData.setUsername(recording.getUserName());
+			userData.setName(recording.getName());
+			userData.setUserrole(recording.getUserrole());
+			userData.setCustomPronuncitionInd(recording.isCustompronunciation());
+		}
+		return  new ResponseEntity<UserData>(userData, headers, HttpStatus.OK);
 	}
 
 	public static void main(String[] args) {
