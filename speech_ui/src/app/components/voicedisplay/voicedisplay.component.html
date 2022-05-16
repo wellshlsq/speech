@@ -22,9 +22,15 @@
   <td><label for="fname">Listen to the pronunciation</label> </td>
   <td><img class="image" src="https://upload.wikimedia.org/wikipedia/commons/2/21/Speaker_Icon.svg" alt="voice" style="width: 20px; height: 20px;" (click)="loadAudioClick()" /></td>
   </tr>
-  <tr>
-    <td></td>
-    <td>&nbsp;</td>
+  <tr><td><label>Locale:</label> 
+    <!-- <select [ngModel]="selectedObject | json" (ngModelChange)="updateSelectedValue($event)">
+      <option *ngFor="#o of names" [value]="o | json" >{{o.name}}</option>
+    </select> -->
+    
+    </td>
+    <td><select name="selectedQuantity" id="aantal" class="form-control" [(ngModel)]="selectedObject">
+      <option *ngFor="let option of names" [value]="option.neural" >{{option.country}}</option>
+  </select></td>
     </tr>
   <tr>
   <td>Opt in for customize pronunciation</td>

@@ -33,14 +33,15 @@ public class SpeechApplication {
 	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
 
 	//@PostMapping("/message")
-	@GetMapping("/message/{fName}/{lName}")
-	public ResponseEntity message(@PathVariable String fName,@PathVariable String lName) throws Exception{
+	@GetMapping("/message/{fName}/{lName}/{neural}")
+	public ResponseEntity message(@PathVariable String fName,@PathVariable String lName,@PathVariable String neural) throws Exception{
 
 
 		RestTemplate template = new RestTemplate();
+
 		//CreateObjectInput payload = new CreateObjectInput();
 		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
-				"name='en-US-ChristopherNeural'>\n" +
+				"name='"+neural+"'>\n" +
 				fName+ " " +lName+ "\n" +
 				"</voice></speak>";
 		HttpHeaders headers = new HttpHeaders();

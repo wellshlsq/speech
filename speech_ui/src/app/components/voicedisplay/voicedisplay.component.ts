@@ -11,15 +11,21 @@ export class VoicedisplayComponent implements OnInit {
   audioSource = '';
   fName = '';
   lName = '';
+  selectedObject='en-US-ChristopherNeural';
   //customPronuncitionOptIn=false;
   customPronuncitionOptIn: boolean | undefined;
   showCustomRecordingOption: boolean | undefined;
+  //names = [{country:'en-IN',neural:'en-IN-PrabhatNeural'}, {country:'en-US',neural:'en-US-ChristopherNeural'}];
+  names :any[] | undefined;
 
   @ViewChild('audioTag') audioTag:ElementRef | undefined;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient) { 
+    
+  }
 
   ngOnInit(): void {
+    this.names=[{'country':'en-IN','neural':'en-IN-PrabhatNeural'}, {'country':'en-US','neural':'en-US-ChristopherNeural'},{'country':'en-GB','neural':'en-GB-RyanNeural'}];
     let user = sessionStorage.getItem('username');
     if(user=='jamie') {
       this.fName = 'Jamie';
@@ -29,6 +35,7 @@ export class VoicedisplayComponent implements OnInit {
       this.fName = 'Cersie';
       this.lName = 'Lannister';
     }
+    
   }
 
   public customRecordingOptInChanged(value:boolean){
@@ -48,7 +55,7 @@ export class VoicedisplayComponent implements OnInit {
             this.audioSource = blobUrl;
          });
     } else{
-      let response = this.http.get(baseURL+"/message/"+this.fName+"/"+this.lName, {responseType: 'blob'});
+      let response = this.http.get(baseURL+"/message/"+this.fName+"/"+this.lName+"/"+this.selectedObject, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});
             let blobUrl = URL.createObjectURL(blob);
