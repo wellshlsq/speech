@@ -11,7 +11,7 @@
   <tr style="height: 18px;">
   <td><label for="lname">Last name:</label></td>
   <td><input type="text" id="lname" name="lname" [(ngModel)]="lName"></td>
-  
+
   </tr>
   <tr>
     <td></td>
@@ -22,11 +22,11 @@
   <td><label for="fname">Listen to the pronunciation</label> </td>
   <td><img class="image" src="https://upload.wikimedia.org/wikipedia/commons/2/21/Speaker_Icon.svg" alt="voice" style="width: 20px; height: 20px;" (click)="loadAudioClick()" /></td>
   </tr>
-  <tr><td><label>Locale:</label> 
+  <tr><td><label>Locale:</label>
     <!-- <select [ngModel]="selectedObject | json" (ngModelChange)="updateSelectedValue($event)">
       <option *ngFor="#o of names" [value]="o | json" >{{o.name}}</option>
     </select> -->
-    
+
     </td>
     <td><select name="selectedQuantity" id="aantal" class="form-control" [(ngModel)]="selectedObject">
       <option *ngFor="let option of names" [value]="option.neural" >{{option.country}}</option>
@@ -36,13 +36,13 @@
   <td>Opt in for customize pronunciation</td>
   <td>
     <div class="checkbox">
-      
+
       <label>
 
-          <input #saveUserNameCheckBox type="checkbox" 
-          id="saveUserNameCheckBox" 
-          [checked]="customPronuncitionOptIn" 
-          
+          <input #saveUserNameCheckBox type="checkbox"
+          id="saveUserNameCheckBox"
+          [checked]="customPronuncitionOptIn"
+
           (change)="customRecordingOptInChanged(saveUserNameCheckBox.checked)">
       </label>
       </div>
@@ -53,6 +53,6 @@
   <br>
   <br>
 <div *ngIf ="showCustomRecordingOption">
-  <app-record-voice [fName]='fName' [lName]='lName'></app-record-voice>
+  <app-record-voice [fName]='fName' [lName]='lName' [username]='username'></app-record-voice>
 </div>
 

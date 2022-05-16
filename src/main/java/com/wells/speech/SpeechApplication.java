@@ -78,10 +78,14 @@ public class SpeechApplication {
 		return new ResponseEntity<byte[]>(recordingRepository.findByName(fName+" "+ lName).get(0).getAudioblob(), headers, HttpStatus.OK);
 	}
 
-	@PostMapping(value="/uploadRecording/{fName}/{lName}")
-	public String uploadRecording(@RequestBody byte[] audioRecording,@PathVariable String fName,@PathVariable String lName) {
-		Recording newRecord = new Recording();
+	@PostMapping(value="/uploadRecording/{fName}/{lName}/{username}")
+	public String uploadRecording(@RequestBody byte[] audioRecording,@PathVariable String fName,@PathVariable String lName, @PathVariable String username) {
+		//Recording newRecord = new Recording();
+		Recording newRecord = recordingRepository.findByUserName(username);
 		newRecord.setName(fName+" "+ lName);
+		newRecord.setFirstName(fName);
+		newRecord.setLastName(lName);
+		newRecord.setCustompronunciation(true);
 		newRecord.setAudioblob(audioRecording);
 		recordingRepository.save(newRecord);
 		return "Recording uploaded !!";
