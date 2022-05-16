@@ -5,8 +5,8 @@ import { VoicedisplayComponent } from './components/voicedisplay/voicedisplay.co
 
 
 const routes: Routes = [
-  { path: '', component: VoicedisplayComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: VoicedisplayComponent },
+  { path: '', component: LoginComponent },
 ];
 
 @NgModule({
