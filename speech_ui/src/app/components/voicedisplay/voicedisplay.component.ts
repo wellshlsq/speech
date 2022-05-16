@@ -21,6 +21,7 @@ export class VoicedisplayComponent implements OnInit {
   audioSource = '';
   fName = '';
   lName = '';
+  username = '';
   selectedObject='en-US-ChristopherNeural';
   //customPronuncitionOptIn=false;
   customPronuncitionOptIn: boolean | undefined;
@@ -69,7 +70,8 @@ export class VoicedisplayComponent implements OnInit {
 
               this.fName = data.firstName;
               this.lName = data.lastName;
-              console.log('userInfo.name ' + this.userInfo.firstName + ' ' + this.userInfo.lastName);
+              this.username = data.username;
+              console.log('userInfo.name ' + this.userInfo.firstName + ' ' + this.userInfo.lastName + this.username);
           })
 
     }
@@ -77,7 +79,7 @@ export class VoicedisplayComponent implements OnInit {
 
   loadAudioClick(){
     var baseURL = window.location.protocol + '//' + window.location.host;
-    if(this.showCustomRecordingOption || this.fName == 'Jamie') {
+    /*if(this.showCustomRecordingOption || this.fName == 'Jamie') {
 
       let response = this.http.get(baseURL+"/getCustomRecording/"+this.fName+"/"+this.lName, {responseType: 'blob'});
       response.subscribe((data)=>{
@@ -85,15 +87,15 @@ export class VoicedisplayComponent implements OnInit {
             let blobUrl = URL.createObjectURL(blob);
             this.audioSource = blobUrl;
          });
-    } else{
-      let response = this.http.get(baseURL+"/message/"+this.fName+"/"+this.lName+"/"+this.selectedObject, {responseType: 'blob'});
+    } else{*/
+      let response = this.http.get(baseURL+"/message/"+this.fName+"/"+this.lName+"/"+this.username+"/"+this.selectedObject, {responseType: 'blob'});
       response.subscribe((data)=>{
             let blob=new Blob([data], {type : 'audio/ogg'});
             let blobUrl = URL.createObjectURL(blob);
             this.audioSource = blobUrl;
             console.log(this.audioSource);
          });
-    }
+    /*}*/
     }
     convertDataURIToBinary(dataURI: String) {
       let BASE64_MARKER = ';base64,';
