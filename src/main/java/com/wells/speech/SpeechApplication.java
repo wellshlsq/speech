@@ -93,6 +93,8 @@ public class SpeechApplication {
 			userData.setName(recording.getName());
 			userData.setUserrole(recording.getUserrole());
 			userData.setCustomPronuncitionInd(recording.isCustompronunciation());
+			userData.setFirstName(recording.getFirstName());
+			userData.setLastName(recording.getLastName());
 		}
 		return  new ResponseEntity<UserData>(userData, headers, HttpStatus.OK);
 	}

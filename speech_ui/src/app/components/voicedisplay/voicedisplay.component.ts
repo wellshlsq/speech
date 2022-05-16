@@ -7,6 +7,8 @@ export interface UserData {
         customPronuncitionInd : boolean;
         username : string;
         userrole : string;
+        firstName : string;
+        lastName : string;
     }
 
 @Component({
@@ -65,9 +67,9 @@ export class VoicedisplayComponent implements OnInit {
       this.http.post<UserData>(baseURL+"/getUserData", { userName: user }).subscribe(data => {
            this.userInfo = data;
 
-              this.fName = data.name;
-              this.lName = data.name;
-              console.log('userInfo.name ' + this.userInfo.name);
+              this.fName = data.firstName;
+              this.lName = data.lastName;
+              console.log('userInfo.name ' + this.userInfo.firstName + ' ' + this.userInfo.lastName);
           })
 
     }

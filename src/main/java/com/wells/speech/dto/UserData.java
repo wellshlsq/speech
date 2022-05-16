@@ -7,6 +7,8 @@ public class UserData {
     boolean customPronuncitionInd;
     String username;
     String userrole;
+    String firstName;
+    String lastName;
 
     public Long getId() {
         return id;
@@ -46,5 +48,21 @@ public class UserData {
 
     public void setUserrole(String userrole) {
         this.userrole = userrole;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
