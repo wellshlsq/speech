@@ -2,6 +2,7 @@ package com.wells.speech;
 
 import com.wells.speech.dbcon.BasicConnectionPool;
 import com.wells.speech.dbcon.ConnectionPool;
+import com.wells.speech.dbcon.DataPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,6 +25,9 @@ public class SpeechApplication {
 
 	@Autowired
 	BasicConnectionPool connPool;
+
+	@Autowired
+	DataPersistence dataPersistence;
 	static String SUBSCRPTION_KEY = "speech.subscription-key";
 	static String OUTPUT_FORMAT = "speech.outputFormat";
 	static String AZURE_SPEECH_SERVICE_ENDPOINT = "speech.azureSpeechEndPoint";
@@ -65,7 +69,7 @@ public class SpeechApplication {
 		//byte[] body = entity.getBody();
 		//ResponseBody respBody
 		//InputStream in = servletContext.getResourceAsStream(entity);
-
+		dataPersistence.save("u1000", entity.getBody());
 		return entity;
 	}
 
@@ -81,6 +85,54 @@ public class SpeechApplication {
 		System.out.println(audioRecording.getAudioBlob());
 		byte[] byteArrray = audioRecording.getAudioBlob().getBytes();
 		return "Congrats !!";
+	}
+
+	@GetMapping("/play")
+	public ResponseEntity play() throws Exception{
+		try {
+			System.out.println("Getting connection from pool..");
+			Connection conn = connPool.getConnection();
+			if(conn != null)
+				System.out.println("Got Connection from the pool");
+
+		} catch(Exception se) {
+			System.out.println("SQLException : " + se.getMessage());
+			se.printStackTrace();
+		}
+
+		String uri = "https://eastus.tts.speech.microsoft.com/cognitiveservices/v1";
+		System.out.println("Sounding name out..");
+
+		RestTemplate template = new RestTemplate();
+		//CreateObjectInput payload = new CreateObjectInput();
+		String payload = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Male'\n" +
+				"name='en-US-ChristopherNeural'>\n" +
+				"Shalaka Kulkarni\n" +
+				"</voice></speak>";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.valueOf("*/*")));
+
+		headers.setContentType(MediaType.valueOf("application/ssml+xml"));
+		headers.set("Ocp-Apim-Subscription-Key", configProp.getConfigValue(SUBSCRPTION_KEY));
+		headers.set("X-Microsoft-OutputFormat", configProp.getConfigValue(OUTPUT_FORMAT));
+		headers.setConnection("keep-alive");
+
+		HttpEntity<Object> requestEntity =
+				new HttpEntity<>(payload, headers);
+
+		ResponseEntity<byte[]> entity = template.exchange(configProp.getConfigValue(AZURE_SPEECH_SERVICE_ENDPOINT), HttpMethod.POST, requestEntity,
+				byte[].class);
+		//byte[] body = entity.getBody();
+		//ResponseBody respBody
+		//InputStream in = servletContext.getResourceAsStream(entity);
+
+
+		byte[] nameSound = dataPersistence.load("u1000");
+
+		ResponseEntity<byte[]> entity1 = new ResponseEntity<>(
+				nameSound, entity.getHeaders(), HttpStatus.OK);
+
+		return entity1;
 	}
 
 	public static void main(String[] args) {

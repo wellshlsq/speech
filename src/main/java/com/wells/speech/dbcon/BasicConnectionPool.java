@@ -71,9 +71,6 @@ public class BasicConnectionPool implements ConnectionPool {
             String url, String user, String password)
             throws Exception {
         return DriverManager.getConnection(url, user, password);
-        //return DriverManager.getConnection("jdbc:yugabytedb://20.115.82.248:5433/yugabyte",
-        //        "yugabyte", "Hackathon22!");
-
     }
 
     public int getSize() {
