@@ -71,6 +71,7 @@ export class VoicedisplayComponent implements OnInit {
               this.fName = data.firstName;
               this.lName = data.lastName;
               this.username = data.username;
+              this.customPronuncitionOptIn = data.customPronuncitionInd;
               console.log('userInfo.name ' + this.userInfo.firstName + ' ' + this.userInfo.lastName + this.username);
           })
 
